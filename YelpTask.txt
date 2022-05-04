@@ -1,0 +1,377 @@
+Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset Coursera Worksheet
+
+This is a 2-part assignment. In the first part, you are asked a series of questions that will help you profile and understand the data just like a data scientist would. For this first part of the assignment, you will be assessed both on the correctness of your findings, as well as the code you used to arrive at your answer. You will be graded on how easy your code is to read, so remember to use proper formatting and comments where necessary.
+
+In the second part of the assignment, you are asked to come up with your own inferences and analysis of the data for a particular research question you want to answer. You will be required to prepare the dataset for the analysis you choose to do. As with the first part, you will be graded, in part, on how easy your code is to read, so use proper formatting and comments to illustrate and communicate your intent as required.
+
+For both parts of this assignment, use this "worksheet." It provides all the questions you are being asked, and your job will be to transfer your answers and SQL coding where indicated into this worksheet so that your peers can review your work. You should be able to use any Text Editor (Windows Notepad, Apple TextEdit, Notepad ++, Sublime Text, etc.) to copy and paste your answers. If you are going to use Word or some other page layout application, just be careful to make sure your answers and code are lined appropriately.
+In this case, you may want to save as a PDF to ensure your formatting remains intact for you reviewer.
+
+
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+	
+i. Attribute table = 10,000
+ii. Business table = 10,000
+iii. Category table = 10,000
+iv. Checkin table = 10,000
+v. elite_years table = 10,000
+vi. friend table = 10,000
+vii. hours table = 10,000
+viii. photo table = 10,000
+ix. review table = 10,000
+x. tip table = 10,000
+xi. user table = 10,000
+	
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+
+i. Business = 10,000
+ii. Hours = 1562
+iii. Category = 2643
+iv. Attribute = 1115
+v. Review = 10,000
+vi. Checkin = 493
+vii. Photo = 10,000
+viii. Tip = 537
+ix. User = 10,000
+x. Friend = 11
+xi. Elite_years = 2780
+
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: no
+	
+	
+	SQL code used to arrive at answer:
+
+SELECT * FROM user
+WHERE id ISNULL
+OR name ISNULL
+OR review_count ISNULL
+OR yelping_since ISNULL
+OR useful ISNULL
+OR funny ISNULL
+OR cool ISNULL
+OR fans ISNULL
+OR average_stars ISNULL
+OR compliment_hot ISNULL
+OR compliment_more ISNULL
+OR compliment_profile ISNULL
+OR compliment_cute ISNULL
+OR compliment_list ISNULL
+OR compliment_note ISNULL
+OR compliment_plain ISNULL
+OR compliment_cool ISNULL
+OR compliment_funny ISNULL
+OR compliment_writer ISNULL
+OR compliment_photos ISNULL
+	
+	
+
+	
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+	i. Table: Review, Column: Stars
+	
+		min: 1		max: 5		avg: 3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min: 1.0	max: 5.0	avg: 3.6549
+		
+	
+	iii. Table: Tip, Column: Likes
+	
+		min: 0		max: 2		avg: 0.0144
+		
+	
+	iv. Table: Checkin, Column: Count
+	
+		min: 1		max: 53		avg: 1.9414
+		
+	
+	v. Table: User, Column: Review_count
+	
+		min: 0		max: 2000		avg: 24.2995
+		
+
+
+5. List the cities with the most reviews in descending order:
+
+	SQL code used to arrive at answer:
+
+SELECT city, SUM(review_count) AS TotalReviews 
+FROM business 
+GROUP BY city
+ORDER BY SUM(review_count) DESC
+LIMIT 5
+	
+	
+	Copy and Paste the Result Below:
+
++------------+--------------+
+| city       | TotalReviews |
++------------+--------------+
+| Las Vegas  |        82854 |
+| Phoenix    |        34503 |
+| Toronto    |        24113 |
+| Scottsdale |        20614 |
+| Charlotte  |        12523 |
++------------+--------------+
+	
+
+	
+6. Find the distribution of star ratings to the business in the following cities:
+
+i. Avon
+
+SQL code used to arrive at answer:
+
+SELECT stars, COUNT(id) AS count
+FROM business
+WHERE city = "Avon"
+GROUP BY stars
+
+
+Copy and Paste the Resulting Table Below (2 columns – star rating and count):
++-------+-------+
+| stars | count |
++-------+-------+
+|   1.5 |     1 |
+|   2.5 |     2 |
+|   3.5 |     3 |
+|   4.0 |     2 |
+|   4.5 |     1 |
+|   5.0 |     1 |
++-------+-------+
+
+
+ii. Beachwood
+
+SQL code used to arrive at answer:
+
+SELECT stars, COUNT(id) AS count
+FROM business
+WHERE city = "Beachwood"
+GROUP BY stars
+
+
+Copy and Paste the Resulting Table Below (2 columns – star rating and count):
++-------+-------+
+| stars | count |
++-------+-------+
+|   2.0 |     1 |
+|   2.5 |     1 |
+|   3.0 |     2 |
+|   3.5 |     2 |
+|   4.0 |     1 |
+|   4.5 |     2 |
+|   5.0 |     5 |
++-------+-------+
+		
+
+
+7. Find the top 3 users based on their total number of reviews:
+		
+	SQL code used to arrive at answer:
+
+SELECT id, name, review_count
+FROM user
+ORDER BY review_count DESC
+LIMIT 3
+	
+		
+	Copy and Paste the Result Below:
++------------------------+--------+--------------+
+| id                     | name   | review_count |
++------------------------+--------+--------------+
+| -G7Zkl1wIWBBmD0KRy_sCw | Gerald |         2000 |
+| -3s52C4zL_DHRK0ULG6qtg | Sara   |         1629 |
+| -8lbUNlXVSoXqaRRiHiSNg | Yuri   |         1339 |
++------------------------+--------+--------------+
+		
+
+
+8. Does posting more reviews correlate with more fans?
+yes
+
+	Please explain your findings and interpretation of the results:
++--------------------+----------------+
+| review_count_group |   average_fans |
++--------------------+----------------+
+| A <250             | 0.779993894373 |
+| B 250-499          |         25.104 |
+| C 500-749          |           54.5 |
+| D 750-999          |          127.5 |
+| E 1000-1249        |          131.6 |
+| F 1250+            |  126.333333333 |
++--------------------+----------------+
+
+it seems individuals from groups with more reviews have a higher average number of fans
+
+the top group may not have that many people in it so better groupings may be needed for more
+detailed analysis
+	
+
+	
+9. Are there more reviews with the word "love" or with the word "hate" in them?
+
+	Answer: love
+
+	
+	SQL code used to arrive at answer:
+
+SELECT SUM(CASE WHEN text LIKE '%love%' THEN 1 ELSE 0 END) AS love_reviews,
+       SUM(CASE WHEN text LIKE '%hate%' THEN 1 ELSE 0 END) AS hate_reviews
+FROM review;
+
+	
+	
+10. Find the top 10 users with the most fans:
+
+	SQL code used to arrive at answer:
+
+SELECT id, name, fans
+FROM user
+ORDER BY fans DESC
+LIMIT 10
+	
+	
+	Copy and Paste the Result Below:
+
++------------------------+-----------+------+
+| id                     | name      | fans |
++------------------------+-----------+------+
+| -9I98YbNQnLdAmcYfb324Q | Amy       |  503 |
+| -8EnCioUmDygAbsYZmTeRQ | Mimi      |  497 |
+| --2vR0DIsmQ6WfcSzKWigw | Harald    |  311 |
+| -G7Zkl1wIWBBmD0KRy_sCw | Gerald    |  253 |
+| -0IiMAZI2SsQ7VmyzJjokQ | Christine |  173 |
+| -g3XIcCb2b-BD0QBCcq2Sw | Lisa      |  159 |
+| -9bbDysuiWeo2VShFJJtcw | Cat       |  133 |
+| -FZBTkAZEXoP7CYvRV2ZwQ | William   |  126 |
+| -9da1xk7zgnnfO1uTVYGkA | Fran      |  124 |
+| -lh59ko3dxChBSZ9U7LfUw | Lissa     |  120 |
++------------------------+-----------+------+
+
+	
+		
+
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. Include your code.
+CHOSE LAS VEGAS AND SHOPPING
+
+i. Do the two groups you chose to analyze have a different distribution of hours?
+The 4-5 star shops have a mean_days_open of 6, while the 2-3 stars have a mean_days_open of 7
+
+
+ii. Do the two groups you chose to analyze have a different number of reviews?
+4-5 star businesses have a much higher mean number of reviews, 20.3 compared to 6
+         
+         
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+longitude and latitude are not good measures for location to infer useful information about the location in 
+this case as they dont have much meaning to the average person, and data like neighborhood is probably more useful.
+
+There also isn't enough data to draw any meaningful conclusions about location as there are 3 business total
+in these star ranges. The answers to the other questions are likely inconclusive too as a result. 
+
+
+SQL code used for analysis:
+
+		
+		
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
+		
+i. Difference 1:
+open businesses have a higher average review count
+         
+         
+ii. Difference 2:
+open businesses have a slightly lower average longitude
+         
+         
+         
+SQL code used for analysis:
+SELECT is_open,
+AVG(longitude),
+AVG(latitude),
+AVG(review_count),
+AVG(stars)
+FROM business
+GROUP BY is_open
+
+	
+	
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do:
+I set out to find if there is a correlation between how cool you are and how many friends you are
+         
+         
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+I tried to group the data into coolness groups and then see the average number of friends for each group
+
+As it turns out there is only one user who has friends, called Gabe, and he has 662!!
+He is also INSAAAAAAAAAANNNNNEEEEEELY COOL so infer from that what you will.   
+Also interesting to note, that Gabe has 662 people registered as friends but no one has him registered as a friend back.
+Maybe Gabe doesn't actually have as many friends as he thinks.
+
+There are people who have friends aside from Gabe in the friend table, however these people are not in the user table.
+Maybe they could be rivals to Gabe in having the most friends one day...
+
+The dataset seems to be incomplete so it is difficult to fully investigate this
+                  
+iii. Output of your finished dataset:
+
++-------------------------------------+--------------+
+| coolness                            | mean_friends |
++-------------------------------------+--------------+
+| A not at all cool                   |          0.0 |
+| B a tiny bit cool                   |          0.0 |
+| C coolish                           |          0.0 |
+| D cool                              |          0.0 |
+| E very cool                         |          0.0 |
+| F soooo cool                        |          0.0 |
+| G INSAAAAAAAAAANNNNNEEEEEELY COOL!! | 1.3031496063 |
++-------------------------------------+--------------+
+
++------------------------+------+------+---------+
+| id                     | name | cool | friends |
++------------------------+------+------+---------+
+| -lGwMGHMC_XihFJNKCJNRg | Gabe |   55 |     662 |
++------------------------+------+------+---------+
+         
+         
+iv. Provide the SQL code you used to create your final dataset:
+
+SELECT CASE
+  WHEN cool = 0 THEN "A not at all cool"
+  WHEN cool < 2 THEN "B a tiny bit cool"
+  WHEN cool < 4 THEN "C coolish"
+  WHEN cool < 6 THEN "D cool"
+  WHEN cool < 8 THEN "E very cool"
+  WHEN cool < 10 THEN "F soooo cool"
+  ELSE "G INSAAAAAAAAAANNNNNEEEEEELY COOL!!"
+END AS coolness,
+COUNT(friend_id)/CAST(COUNT(DISTINCT id) AS FLOAT) AS mean_friends
+FROM user U LEFT JOIN friend F ON U.id = F.user_id
+GROUP BY coolness
+
+-- seeing who has friends
+SELECT id, name, cool,
+COUNT(friend_id) AS friends
+FROM user U INNER JOIN friend F ON U.id = F.user_id
+GROUP BY id
